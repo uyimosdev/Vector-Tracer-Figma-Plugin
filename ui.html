@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>Vector Tracer</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                font-size: 12px;
+                background: #2c2c2c;
+                color: #ffffff;
+                padding: 16px;
+                min-height: 100vh;
+            }
+
+            .header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #404040;
+            }
+
+            .logo {
+                width: 24px;
+                height: 24px;
+                background: linear-gradient(135deg, #18a0fb, #0066cc);
+                border-radius: 6px;
+                margin-right: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            .title {
+                font-size: 14px;
+                font-weight: 600;
+                color: #ffffff;
+            }
+
+            .section {
+                margin-bottom: 20px;
+            }
+
+            .section-title {
+                font-size: 11px;
+                font-weight: 600;
+                color: #b3b3b3;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 8px;
+            }
+
+            .control-group {
+                margin-bottom: 12px;
+            }
+
+            .control-label {
+                display: block;
+                font-size: 11px;
+                color: #b3b3b3;
+                margin-bottom: 4px;
+            }
+
+            .slider-container {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .slider {
+                flex: 1;
+                height: 4px;
+                background: #404040;
+                border-radius: 2px;
+                outline: none;
+                -webkit-appearance: none;
+            }
+
+            .slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 12px;
+                height: 12px;
+                background: #18a0fb;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+
+            .slider::-moz-range-thumb {
+                width: 12px;
+                height: 12px;
+                background: #18a0fb;
+                border-radius: 50%;
+                cursor: pointer;
+                border: none;
+            }
+
+            .slider-value {
+                font-size: 11px;
+                color: #ffffff;
+                min-width: 30px;
+                text-align: right;
+            }
+
+            .checkbox-container {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+
+            .checkbox {
+                width: 14px;
+                height: 14px;
+                background: #404040;
+                border: 1px solid #666666;
+                border-radius: 2px;
+                cursor: pointer;
+                position: relative;
+            }
+
+            .checkbox.checked {
+                background: #18a0fb;
+                border-color: #18a0fb;
+            }
+
+            .checkbox.checked::after {
+                content: '✓';
+                position: absolute;
+                top: -1px;
+                left: 2px;
+                color: white;
+                font-size: 10px;
+            }
+
+            .checkbox-label {
+                font-size: 11px;
+                color: #ffffff;
+                cursor: pointer;
+            }
+
+            .button {
+                width: 100%;
+                padding: 10px 16px;
+                background: #18a0fb;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                font-size: 12px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .button:hover {
+                background: #0066cc;
+            }
+
+            .button:disabled {
+                background: #404040;
+                color: #666666;
+                cursor: not-allowed;
+            }
+
+            .button.secondary {
+                background: #404040;
+                color: #ffffff;
+            }
+
+            .button.secondary:hover {
+                background: #4a4a4a;
+            }
+
+            .preview-container {
+                background: #1a1a1a;
+                border: 1px solid #404040;
+                border-radius: 6px;
+                padding: 12px;
+                margin-bottom: 16px;
+                min-height: 120px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #666666;
+                font-size: 11px;
+            }
+
+            .mode-selector {
+                display: flex;
+                gap: 4px;
+                margin-bottom: 12px;
+            }
+
+            .mode-button {
+                flex: 1;
+                padding: 6px 8px;
+                background: #404040;
+                color: #b3b3b3;
+                border: none;
+                border-radius: 4px;
+                font-size: 10px;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .mode-button.active {
+                background: #18a0fb;
+                color: white;
+            }
+
+            .status {
+                font-size: 10px;
+                color: #b3b3b3;
+                text-align: center;
+                margin-top: 12px;
+            }
+
+            .error {
+                color: #ff6b6b;
+            }
+
+            .success {
+                color: #51cf66;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="header">
+            <div class="logo">V</div>
+            <div class="title">Vector Tracer</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Mode</div>
+            <div class="mode-selector">
+                <button class="mode-button active" data-mode="color">Color</button>
+                <button class="mode-button" data-mode="bw">B&W</button>
+                <button class="mode-button" data-mode="mask">Mask</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Preview</div>
+            <div class="preview-container" id="preview">
+                Select an image to see preview
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Tracing Settings</div>
+
+            <div class="control-group">
+                <label class="control-label">Threshold</label>
+                <div class="slider-container">
+                    <input type="range" class="slider" id="threshold" min="0" max="255" value="128">
+                    <span class="slider-value" id="threshold-value">128</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Smoothness</label>
+                <div class="slider-container">
+                    <input type="range" class="slider" id="smoothness" min="0" max="100" value="50">
+                    <span class="slider-value" id="smoothness-value">50</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Detail Level</label>
+                <div class="slider-container">
+                    <input type="range" class="slider" id="detail" min="1" max="10" value="5">
+                    <span class="slider-value" id="detail-value">5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Options</div>
+
+            <div class="checkbox-container">
+                <div class="checkbox" id="invert-checkbox"></div>
+                <label class="checkbox-label" for="invert-checkbox">Invert colors</label>
+            </div>
+
+            <div class="checkbox-container">
+                <div class="checkbox checked" id="fill-checkbox"></div>
+                <label class="checkbox-label" for="fill-checkbox">Fill shapes</label>
+            </div>
+
+            <div class="checkbox-container">
+                <div class="checkbox" id="stroke-checkbox"></div>
+                <label class="checkbox-label" for="stroke-checkbox">Add stroke</label>
+            </div>
+        </div>
+
+        <div class="section">
+            <button class="button" id="trace-button" disabled>Trace Image</button>
+            <button class="button secondary" id="reset-button" style="margin-top: 8px;">Reset Settings</button>
+        </div>
+
+        <div class="status" id="status">Select an image to start tracing</div>
+
+        <script>
+            // UI State Management
+            let currentMode = 'color';
+            let selectedImage = null;
+            let settings = {
+                threshold: 128,
+                smoothness: 50,
+                detail: 5,
+                invert: false,
+                fill: true,
+                stroke: false
+            };
+
+            // Initialize UI
+            function initializeUI() {
+                // Mode buttons
+                document.querySelectorAll('.mode-button').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.querySelectorAll('.mode-button').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        currentMode = e.target.dataset.mode;
+                        updatePreview();
+                    });
+                });
+
+                // Sliders
+                const sliders = ['threshold', 'smoothness', 'detail'];
+                sliders.forEach(sliderId => {
+                    const slider = document.getElementById(sliderId);
+                    const valueDisplay = document.getElementById(sliderId + '-value');
+
+                    slider.addEventListener('input', (e) => {
+                        const value = parseInt(e.target.value);
+                        settings[sliderId] = value;
+                        valueDisplay.textContent = value;
+                        updatePreview();
+                    });
+                });
+
+                // Checkboxes
+                const checkboxes = ['invert', 'fill', 'stroke'];
+                checkboxes.forEach(checkboxId => {
+                    const checkbox = document.getElementById(checkboxId + '-checkbox');
+                    checkbox.addEventListener('click', () => {
+                        checkbox.classList.toggle('checked');
+                        settings[checkboxId] = checkbox.classList.contains('checked');
+                        updatePreview();
+                    });
+                });
+
+                // Buttons
+                document.getElementById('trace-button').addEventListener('click', traceImage);
+                document.getElementById('reset-button').addEventListener('click', resetSettings);
+            }
+
+            function updatePreview() {
+                if (!selectedImage) return;
+
+                // Send preview request to main thread
+                parent.postMessage({
+                    pluginMessage: {
+                        type: 'preview',
+                        mode: currentMode,
+                        settings: settings
+                    }
+                }, '*');
+            }
+
+            function traceImage() {
+                if (!selectedImage) return;
+
+                document.getElementById('trace-button').disabled = true;
+                document.getElementById('status').textContent = 'Tracing image...';
+
+                parent.postMessage({
+                    pluginMessage: {
+                        type: 'trace',
+                        mode: currentMode,
+                        settings: settings
+                    }
+                }, '*');
+            }
+
+            function resetSettings() {
+                settings = {
+                    threshold: 128,
+                    smoothness: 50,
+                    detail: 5,
+                    invert: false,
+                    fill: true,
+                    stroke: false
+                };
+
+                // Update UI
+                document.getElementById('threshold').value = 128;
+                document.getElementById('threshold-value').textContent = '128';
+                document.getElementById('smoothness').value = 50;
+                document.getElementById('smoothness-value').textContent = '50';
+                document.getElementById('detail').value = 5;
+                document.getElementById('detail-value').textContent = '5';
+
+                document.getElementById('invert-checkbox').classList.remove('checked');
+                document.getElementById('fill-checkbox').classList.add('checked');
+                document.getElementById('stroke-checkbox').classList.remove('checked');
+
+                updatePreview();
+            }
+
+            // Message handling from main thread
+            window.onmessage = (event) => {
+                const message = event.data.pluginMessage;
+
+                switch (message.type) {
+                    case 'selection-changed':
+                        selectedImage = message.hasImage;
+                        document.getElementById('trace-button').disabled = !selectedImage;
+
+                        if (selectedImage) {
+                            document.getElementById('status').textContent = 'Image selected - ready to trace';
+                            document.getElementById('preview').textContent = 'Preview will appear here';
+                            updatePreview();
+                        } else {
+                            document.getElementById('status').textContent = 'Select an image to start tracing';
+                            document.getElementById('preview').textContent = 'Select an image to see preview';
+                        }
+                        break;
+
+                    case 'trace-complete':
+                        document.getElementById('trace-button').disabled = false;
+                        document.getElementById('status').classList.add('success');
+                        document.getElementById('status').textContent = 'Vector created successfully!';
+                        setTimeout(() => {
+                            document.getElementById('status').classList.remove('success');
+                            document.getElementById('status').textContent = 'Ready for next trace';
+                        }, 3000);
+                        break;
+
+                    case 'trace-error':
+                        document.getElementById('trace-button').disabled = false;
+                        document.getElementById('status').classList.add('error');
+                        document.getElementById('status').textContent = message.error || 'Error during tracing';
+                        setTimeout(() => {
+                            document.getElementById('status').classList.remove('error');
+                            document.getElementById('status').textContent = 'Select an image to start tracing';
+                        }, 3000);
+                        break;
+
+                    case 'preview-ready':
+                        // Update preview with processed image data
+                        if (message.previewData) {
+                            document.getElementById('preview').innerHTML = `<img src="${message.previewData}" style="max-width: 100%; max-height: 100px;">`;
+                        }
+                        break;
+                }
+            };
+
+            // Initialize when DOM is loaded
+            document.addEventListener('DOMContentLoaded', initializeUI);
+        </script>
+    </body>
+
+</html>

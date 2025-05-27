@@ -1,0 +1,37 @@
+{
+    "name": "vector-tracer-figma-plugin",
+    "version": "1.0.0",
+    "description": "A Figma plugin that converts images to scalable vector graphics with advanced tracing capabilities",
+    "main": "code.js",
+    "scripts": {
+        "build": "echo 'Plugin files are ready for Figma'",
+        "dev": "echo 'Open Figma and import the plugin for development'",
+        "lint": "echo 'No linting configured yet'"
+    },
+    "keywords": [
+        "figma",
+        "plugin",
+        "vector",
+        "trace",
+        "image",
+        "svg",
+        "conversion",
+        "graphics"
+    ],
+    "author": "Vector Tracer Team",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/your-username/vector-tracer-figma-plugin"
+    },
+    "figma": {
+        "id": "vector-tracer-plugin",
+        "name": "Vector Tracer"
+    },
+    "devDependencies": {
+        "@figma/plugin-typings": "^1.75.0"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}
