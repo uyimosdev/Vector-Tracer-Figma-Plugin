@@ -1,4 +1,6 @@
 // Type definitions for Vector Tracer Figma Plugin
+// Author: Uyi Moses
+// Repository: https://github.com/uyimosdev/image-to-vector-figma
 
 interface TracingSettings {
     threshold: number;      // 0-255

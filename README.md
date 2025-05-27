@@ -59,10 +59,10 @@ A powerful Figma plugin that converts raster images into infinitely scalable vec
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/vector-tracer-figma-plugin.git
+git clone https://github.com/uyimosdev/image-to-vector-figma.git
 
 # Navigate to the project directory
-cd vector-tracer-figma-plugin
+cd image-to-vector-figma
 
 # Install dependencies (optional)
 npm install
@@ -210,6 +210,6 @@ If you encounter any issues or have questions:
 
 ---
 
-**Made with ❤️ for the Figma community**
+**Made with ❤️ by Uyi Moses for the Figma community**
 
 Transform your images into scalable vectors today! 🚀 

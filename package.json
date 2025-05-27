@@ -18,11 +18,11 @@
         "conversion",
         "graphics"
     ],
-    "author": "Vector Tracer Team",
+    "author": "Uyi Moses",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/your-username/vector-tracer-figma-plugin"
+        "url": "https://github.com/uyimosdev/image-to-vector-figma"
     },
     "figma": {
         "id": "vector-tracer-plugin",

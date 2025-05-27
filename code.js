@@ -1,5 +1,7 @@
 // Vector Tracer Plugin - Main Code
 // Handles image processing and vector conversion
+// Author: Uyi Moses
+// Repository: https://github.com/uyimosdev/image-to-vector-figma
 
 figma.showUI(__html__, {
     width: 280,
