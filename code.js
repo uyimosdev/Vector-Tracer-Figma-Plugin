@@ -23,11 +23,30 @@ checkSelection();
 function checkSelection() {
     const selection = figma.currentPage.selection;
 
-    if (selection.length === 1 && selection[0].type === 'RECTANGLE' && selection[0].fills.length > 0) {
+    if (selection.length === 1) {
         const node = selection[0];
-        const fill = node.fills[0];
 
-        if (fill.type === 'IMAGE') {
+        // Check for different node types that can contain images
+        let hasImage = false;
+
+        if (node.type === 'RECTANGLE' && node.fills && node.fills.length > 0) {
+            // Rectangle with image fill
+            const fill = node.fills[0];
+            if (fill.type === 'IMAGE') {
+                hasImage = true;
+            }
+        } else if (node.type === 'IMAGE') {
+            // Direct image node
+            hasImage = true;
+        } else if (node.type === 'FRAME' && node.fills && node.fills.length > 0) {
+            // Frame with image fill
+            const fill = node.fills[0];
+            if (fill.type === 'IMAGE') {
+                hasImage = true;
+            }
+        }
+
+        if (hasImage) {
             currentSelection = node;
             figma.ui.postMessage({
                 type: 'selection-changed',
@@ -114,10 +133,22 @@ async function handleTrace(mode, settings) {
 
 async function getImageBytes(node) {
     try {
-        const fill = node.fills[0];
-        if (fill.type !== 'IMAGE') return null;
+        let imageHash = null;
 
-        const image = figma.getImageByHash(fill.imageHash);
+        if (node.type === 'IMAGE') {
+            // Direct image node
+            imageHash = node.imageHash;
+        } else if ((node.type === 'RECTANGLE' || node.type === 'FRAME') && node.fills && node.fills.length > 0) {
+            // Rectangle or Frame with image fill
+            const fill = node.fills[0];
+            if (fill.type === 'IMAGE') {
+                imageHash = fill.imageHash;
+            }
+        }
+
+        if (!imageHash) return null;
+
+        const image = figma.getImageByHash(imageHash);
         if (!image) return null;
 
         return await image.getBytesAsync();
