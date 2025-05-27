@@ -17,13 +17,6 @@
     "permissions": [
         "currentuser"
     ],
-    "parameters": [
-        {
-            "name": "Trace Image",
-            "key": "trace",
-            "description": "Convert selected image to vector"
-        }
-    ],
     "menu": [
         {
             "name": "Vector Tracer",
